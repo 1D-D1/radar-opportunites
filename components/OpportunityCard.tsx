@@ -28,7 +28,7 @@ export default function OpportunityCard({
 }: OpportunityCardProps) {
   const [expanded, setExpanded] = useState(false);
 
-  const signal = SIGNAL_CONFIG[opportunity.signal_type];
+  const signal = SIGNAL_CONFIG[opportunity.signal_type] || { label: opportunity.signal_type || 'Signal', color: '#6366f1', icon: '📡' };
   const totalScore =
     opportunity.scores.urgence +
     opportunity.scores.faisabilite +
