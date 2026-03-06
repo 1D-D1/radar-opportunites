@@ -36,19 +36,21 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cri.1d-d1.io';
+
   // Protected routes
   const protectedPaths = ['/dashboard', '/settings', '/scan'];
   const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path));
 
   if (isProtected && !user) {
-    const loginUrl = new URL('/auth/login', request.url);
+    const loginUrl = new URL(`${appUrl}/auth/login`);
     loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   // Redirect logged-in users from login page
   if (request.nextUrl.pathname === '/auth/login' && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL(`${appUrl}/dashboard`));
   }
 
   return response;

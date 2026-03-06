@@ -3,11 +3,12 @@ import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://cri.1d-d1.io';
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/auth/login?error=auth`);
+    return NextResponse.redirect(`${appUrl}/auth/login?error=auth`);
   }
 
   const cookieStore = cookies();
@@ -33,8 +34,8 @@ export async function GET(request: NextRequest) {
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    return NextResponse.redirect(`${origin}/auth/login?error=auth`);
+    return NextResponse.redirect(`${appUrl}/auth/login?error=auth`);
   }
 
-  return NextResponse.redirect(`${origin}/dashboard`);
+  return NextResponse.redirect(`${appUrl}/dashboard`);
 }
