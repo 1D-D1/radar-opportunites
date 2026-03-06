@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient, createServiceRoleClient } from '@/lib/supabase-server';
 import { runOpportunityScan } from '@/lib/anthropic';
 import type { ScanResult } from '@/types/opportunity';
+import { normalizeSignalType } from '@/types/opportunity';
 
 export const maxDuration = 120; // Allow up to 2 minutes for scan
 
@@ -82,6 +83,14 @@ export async function POST(request: NextRequest) {
         } else {
           throw new Error('Impossible de parser le résultat du scan');
         }
+      }
+
+      // Normalize signal_type values from AI output
+      if (scanResult.opportunities) {
+        scanResult.opportunities = scanResult.opportunities.map(opp => ({
+          ...opp,
+          signal_type: normalizeSignalType(opp.signal_type),
+        }));
       }
 
       // Update scan with results

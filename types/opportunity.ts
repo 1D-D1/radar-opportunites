@@ -85,6 +85,45 @@ export const SIGNAL_CONFIG: Record<SignalType, { label: string; color: string; i
   demande: { label: 'Demande', color: '#10b981', icon: '🎯' },
 };
 
+// Normalize signal_type from AI responses to canonical values
+const SIGNAL_ALIASES: Record<string, SignalType> = {
+  // Réglementation variants
+  reglementation: 'reglementation',
+  réglementation: 'reglementation',
+  regulation: 'reglementation',
+  pont_reglementaire: 'reglementation',
+  compliance: 'reglementation',
+  legal: 'reglementation',
+  // Tendance variants
+  tendance: 'tendance',
+  trend: 'tendance',
+  macro_tendance: 'tendance',
+  tendance_macro: 'tendance',
+  // Friction variants
+  friction: 'friction',
+  pain_point: 'friction',
+  douleur: 'friction',
+  probleme: 'friction',
+  // Technologie variants
+  techno: 'techno',
+  technologie: 'techno',
+  technology: 'techno',
+  tech: 'techno',
+  nouvelle_techno: 'techno',
+  // Demande variants
+  demande: 'demande',
+  demand: 'demande',
+  marche: 'demande',
+  market: 'demande',
+  besoin: 'demande',
+};
+
+export function normalizeSignalType(raw: string): SignalType {
+  if (!raw) return 'tendance';
+  const key = raw.toLowerCase().trim().replace(/[éèê]/g, 'e').replace(/\s+/g, '_');
+  return SIGNAL_ALIASES[key] || SIGNAL_ALIASES[raw.toLowerCase().trim()] || 'tendance';
+}
+
 // Scan animation phases
 export const SCAN_PHASES = [
   { icon: '🌐', label: 'Analyse des tendances tech mondiales...' },
