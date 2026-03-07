@@ -65,7 +65,7 @@ Réponds UNIQUEMENT en JSON valide sans backticks :
 
 export async function runOpportunityScan(): Promise<string> {
   const response = await getClient().messages.create({
-    model: 'claude-sonnet-4-5',
+    model: 'claude-sonnet-4-6',
     max_tokens: 16000,
     system: SCAN_SYSTEM_PROMPT,
     tools: [
@@ -117,7 +117,7 @@ Réponds UNIQUEMENT avec le mega-prompt, sans JSON, sans backticks, sans explica
 
 export async function generateBrief(opportunity: any): Promise<string> {
   const response = await getClient().messages.create({
-    model: 'claude-sonnet-4-5',
+    model: 'claude-sonnet-4-6',
     max_tokens: 8000,
     system: BRIEF_SYSTEM_PROMPT,
     messages: [
