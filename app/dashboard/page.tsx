@@ -75,7 +75,7 @@ export default function DashboardPage() {
 
   // ── Load last scan ────────────────────────────────────────────
   const loadLastScan = useCallback(
-    async (userId: string) => {
+    async (userId: string, userProfile: Profile | null) => {
       const { data: scans } = await supabase
         .from('scans')
         .select('*')
@@ -84,22 +84,28 @@ export default function DashboardPage() {
         .order('scan_date', { ascending: false })
         .limit(1);
 
+      const isQuotaReached =
+        userProfile?.plan === 'free' &&
+        (userProfile?.scans_this_month ?? 0) >= FREE_SCAN_LIMIT;
+
       if (scans && scans.length > 0) {
         const lastScan = scans[0];
         const scanAge = Date.now() - new Date(lastScan.scan_date).getTime();
         const twentyFourHours = 24 * 60 * 60 * 1000;
 
-        if (scanAge > twentyFourHours) {
+        // Always show last scan data first
+        setCurrentScan({
+          market_pulse: lastScan.market_pulse,
+          opportunities: lastScan.opportunities,
+          scan_date: lastScan.scan_date,
+        });
+        setCurrentScanId(lastScan.id);
+
+        // Only auto-refresh if scan is old AND quota not reached
+        if (scanAge > twentyFourHours && !isQuotaReached) {
           startScan();
-        } else {
-          setCurrentScan({
-            market_pulse: lastScan.market_pulse,
-            opportunities: lastScan.opportunities,
-            scan_date: lastScan.scan_date,
-          });
-          setCurrentScanId(lastScan.id);
         }
-      } else {
+      } else if (!isQuotaReached) {
         startScan();
       }
     },
@@ -126,11 +132,12 @@ export default function DashboardPage() {
         .eq('id', authUser.id)
         .single();
 
-      if (profileData) {
-        setProfile(profileData as Profile);
+      const prof = profileData ? (profileData as Profile) : null;
+      if (prof) {
+        setProfile(prof);
       }
 
-      loadLastScan(authUser.id);
+      loadLastScan(authUser.id, prof);
     }
 
     init();
@@ -247,16 +254,6 @@ export default function DashboardPage() {
           />
         )}
 
-        {/* ═══ PRICING GATE ═══ */}
-        {quotaReached && (
-          <PricingGate
-            scansUsed={profile?.scans_this_month ?? 0}
-            scansLimit={FREE_SCAN_LIMIT}
-            plan={profile?.plan ?? 'free'}
-            onUpgrade={handleUpgrade}
-          />
-        )}
-
         {/* ═══ SCAN ANIMATION ═══ */}
         {isScanning && (
           <div className="py-20">
@@ -265,7 +262,7 @@ export default function DashboardPage() {
         )}
 
         {/* ═══ OPPORTUNITY CARDS ═══ */}
-        {currentScan && !isScanning && !quotaReached && (
+        {currentScan && !isScanning && (
           <div className="space-y-4 mt-6">
             {currentScan.opportunities.map((opportunity, index) => (
               <OpportunityCard
@@ -277,6 +274,16 @@ export default function DashboardPage() {
               />
             ))}
           </div>
+        )}
+
+        {/* ═══ PRICING GATE (after cards) ═══ */}
+        {quotaReached && (
+          <PricingGate
+            scansUsed={profile?.scans_this_month ?? 0}
+            scansLimit={FREE_SCAN_LIMIT}
+            plan={profile?.plan ?? 'free'}
+            onUpgrade={handleUpgrade}
+          />
         )}
 
         {/* ═══ SCAN HISTORY LINK ═══ */}
