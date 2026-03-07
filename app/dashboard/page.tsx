@@ -159,9 +159,17 @@ export default function DashboardPage() {
 
   // ── Upgrade to Pro ────────────────────────────────────────────
   async function handleUpgrade() {
-    const res = await fetch('/api/stripe/checkout', { method: 'POST' });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
+    try {
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || 'Erreur lors de la redirection vers le paiement.');
+      }
+    } catch {
+      setError('Erreur de connexion au service de paiement.');
+    }
   }
 
   // ── Logout ────────────────────────────────────────────────────

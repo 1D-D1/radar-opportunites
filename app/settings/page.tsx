@@ -36,6 +36,7 @@ export default function SettingsPage() {
   const [savedOpportunities, setSavedOpportunities] = useState<SavedOpportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [upgrading, setUpgrading] = useState(false);
+  const [stripeError, setStripeError] = useState<string | null>(null);
 
   // ── Auth + profile + saved opportunities on mount ──────────
   useEffect(() => {
@@ -81,12 +82,35 @@ export default function SettingsPage() {
   // ── Upgrade to Pro ─────────────────────────────────────────
   async function handleUpgrade() {
     setUpgrading(true);
+    setStripeError(null);
     try {
       const res = await fetch('/api/stripe/checkout', { method: 'POST' });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setStripeError(data.error || 'Erreur lors de la redirection vers le paiement.');
+        setUpgrading(false);
+      }
     } catch {
+      setStripeError('Erreur de connexion. Veuillez réessayer.');
       setUpgrading(false);
+    }
+  }
+
+  // ── Manage subscription (Customer Portal) ────────────────
+  async function handleManageSubscription() {
+    setStripeError(null);
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setStripeError(data.error || 'Erreur d\'accès au portail de gestion.');
+      }
+    } catch {
+      setStripeError('Erreur de connexion. Veuillez réessayer.');
     }
   }
 
@@ -190,9 +214,17 @@ export default function SettingsPage() {
               </div>
             </div>
 
+            {/* Stripe error message */}
+            {stripeError && (
+              <div className="mb-4 p-3 bg-[#f87171]/10 border border-[#f87171]/20 rounded-[10px]">
+                <p className="text-[13px] text-[#f87171]">{stripeError}</p>
+              </div>
+            )}
+
             {/* Upgrade / Manage button */}
             {profile?.plan === 'pro' ? (
               <button
+                onClick={handleManageSubscription}
                 className="px-4 py-2.5 rounded-[10px] text-[13px] font-medium bg-[#111827] text-[#94a3b8] border border-[#1e293b] hover:text-[#f1f5f9] hover:border-[#334155] transition-colors cursor-pointer"
               >
                 Gerer l&apos;abonnement

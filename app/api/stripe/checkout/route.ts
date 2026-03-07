@@ -4,6 +4,15 @@ import { getStripe } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check Stripe configuration
+    if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_PRICE_ID_PRO) {
+      console.error('Stripe not configured: missing STRIPE_SECRET_KEY or STRIPE_PRICE_ID_PRO');
+      return NextResponse.json(
+        { error: 'Le paiement n\'est pas encore configuré. Contactez l\'administrateur.' },
+        { status: 503 }
+      );
+    }
+
     const supabase = createServerSupabaseClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -39,7 +48,7 @@ export async function POST(request: NextRequest) {
       customer: customerId,
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID_PRO!,
+          price: process.env.STRIPE_PRICE_ID_PRO,
           quantity: 1,
         },
       ],
@@ -53,7 +62,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Stripe checkout error:', error);
     return NextResponse.json(
-      { error: 'Erreur création session paiement' },
+      { error: 'Erreur création session paiement. Réessayez plus tard.' },
       { status: 500 }
     );
   }
