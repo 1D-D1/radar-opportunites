@@ -1,5 +1,5 @@
 // ============================================================
-// TYPES — Radar Opportunités
+// TYPES — PHAROS
 // ============================================================
 
 export type SignalType = 'reglementation' | 'tendance' | 'friction' | 'techno' | 'demande';
@@ -74,6 +74,13 @@ export interface Profile {
   scans_reset_date: string;
   stripe_customer_id: string | null;
   created_at: string;
+  // Onboarding fields
+  display_name: string | null;
+  bio: string | null;
+  interests: string[];
+  skills: string[];
+  project_goals: string | null;
+  onboarding_completed: boolean;
 }
 
 // Signal configuration

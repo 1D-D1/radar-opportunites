@@ -39,8 +39,8 @@ export default function LaunchModal({ brief, projectName, onClose }: LaunchModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="relative bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-6 max-w-lg w-full mx-4 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="relative bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-5 sm:p-6 max-w-lg w-full shadow-2xl">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -77,7 +77,7 @@ export default function LaunchModal({ brief, projectName, onClose }: LaunchModal
                     i < currentStep
                       ? "bg-[#4ade80] text-white"
                       : i === currentStep
-                        ? "bg-[#6366f1] text-white shadow-lg shadow-[#6366f1]/30"
+                        ? "bg-[#f59e0b] text-[#020617] shadow-lg shadow-[#f59e0b]/30"
                         : "bg-[#111827] text-[#64748b] border border-[#1e293b]"
                   }`}
                 >
@@ -122,7 +122,7 @@ export default function LaunchModal({ brief, projectName, onClose }: LaunchModal
                 className={`flex items-center gap-2.5 px-6 py-3 rounded-[12px] text-[14px] font-semibold transition-all duration-300 ${
                   copied
                     ? "bg-[#4ade80]/15 text-[#4ade80] border border-[#4ade80]/30 scale-105"
-                    : "bg-[#6366f1] text-white hover:bg-[#818cf8] shadow-lg shadow-[#6366f1]/25 hover:shadow-[#6366f1]/40"
+                    : "bg-[#f59e0b] text-[#020617] hover:bg-[#fbbf24] shadow-lg shadow-[#f59e0b]/25 hover:shadow-[#f59e0b]/40"
                 }`}
               >
                 {copied ? (
@@ -149,7 +149,7 @@ export default function LaunchModal({ brief, projectName, onClose }: LaunchModal
             <div className="flex flex-col items-center gap-4 animate-fadeIn">
               <button
                 onClick={handleOpenClaude}
-                className="flex items-center gap-2.5 px-6 py-3 rounded-[12px] text-[14px] font-semibold bg-[#6366f1] text-white hover:bg-[#818cf8] shadow-lg shadow-[#6366f1]/25 hover:shadow-[#6366f1]/40 transition-all duration-300"
+                className="flex items-center gap-2.5 px-6 py-3 rounded-[12px] text-[14px] font-semibold bg-[#f59e0b] text-[#020617] hover:bg-[#fbbf24] shadow-lg shadow-[#f59e0b]/25 hover:shadow-[#f59e0b]/40 transition-all duration-300"
               >
                 <span>Ouvrir Claude Code</span>
               </button>
@@ -203,8 +203,8 @@ export default function LaunchModal({ brief, projectName, onClose }: LaunchModal
           </button>
 
           {showPreview && (
-            <div className="mt-3 bg-[#111827] rounded-[12px] p-4 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-[#1e293b] scrollbar-track-transparent animate-fadeIn">
-              <pre className="text-[12px] font-mono text-[#64748b] whitespace-pre-wrap leading-relaxed">
+            <div className="mt-3 bg-[#111827] rounded-[12px] p-4 max-h-[200px] overflow-y-auto animate-fadeIn">
+              <pre className="text-[12px] font-mono text-[#64748b] whitespace-pre-wrap leading-relaxed break-words">
                 {brief}
               </pre>
             </div>

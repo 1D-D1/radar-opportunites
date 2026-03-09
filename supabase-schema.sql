@@ -1,5 +1,5 @@
 -- ============================================================
--- RADAR OPPORTUNITÉS — Schéma Supabase
+-- PHAROS — Schéma Supabase
 -- ============================================================
 -- Exécuter ce script dans l'éditeur SQL de Supabase (Dashboard → SQL Editor)
 -- ============================================================
@@ -13,7 +13,14 @@ CREATE TABLE IF NOT EXISTS profiles (
   scans_this_month INTEGER DEFAULT 0,
   scans_reset_date TIMESTAMP WITH TIME ZONE DEFAULT (date_trunc('month', now()) + interval '1 month'),
   stripe_customer_id TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  -- PHAROS onboarding fields
+  display_name TEXT,
+  bio TEXT,
+  interests TEXT[] DEFAULT '{}',
+  skills TEXT[] DEFAULT '{}',
+  project_goals TEXT,
+  onboarding_completed BOOLEAN DEFAULT FALSE
 );
 
 -- 2. TABLE SCANS

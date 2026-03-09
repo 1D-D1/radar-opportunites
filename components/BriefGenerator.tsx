@@ -93,8 +93,8 @@ export default function BriefGenerator({ opportunity, onClose }: BriefGeneratorP
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="relative bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-6 max-w-2xl w-full mx-4 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="relative bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-5 sm:p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -117,10 +117,15 @@ export default function BriefGenerator({ opportunity, onClose }: BriefGeneratorP
 
         {/* Header */}
         <div className="mb-5">
-          <h2 className="text-[18px] font-bold text-[#f1f5f9]">
-            Protocole Claude Code
-          </h2>
-          <p className="text-[13px] text-[#64748b] mt-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <h2 className="text-[18px] font-bold text-[#f1f5f9]">
+              Protocole Claude Code
+            </h2>
+            <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#f59e0b]/15 text-[#f59e0b] tracking-wide">
+              Powered by Claude
+            </span>
+          </div>
+          <p className="text-[13px] text-[#64748b] mt-1 break-words">
             {opportunity.name} &mdash; {opportunity.tagline}
           </p>
         </div>
@@ -131,7 +136,7 @@ export default function BriefGenerator({ opportunity, onClose }: BriefGeneratorP
             {/* Spinner */}
             <div className="relative w-10 h-10">
               <div className="absolute inset-0 rounded-full border-2 border-[#1e293b]" />
-              <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#6366f1] animate-spin" />
+              <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#f59e0b] animate-spin" />
             </div>
             <p className="text-[14px] text-[#94a3b8]">
               Generation du protocole Claude Code...
@@ -142,7 +147,7 @@ export default function BriefGenerator({ opportunity, onClose }: BriefGeneratorP
             <p className="text-[14px] text-red-400 mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="text-[13px] text-[#6366f1] hover:text-[#818cf8] underline transition-colors"
+              className="text-[13px] text-[#f59e0b] hover:text-[#fbbf24] underline transition-colors"
             >
               Reessayer
             </button>
@@ -150,20 +155,20 @@ export default function BriefGenerator({ opportunity, onClose }: BriefGeneratorP
         ) : (
           <>
             {/* Brief display */}
-            <div className="bg-[#111827] border border-[#1e293b] rounded-[12px] p-5 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-[#1e293b] scrollbar-track-transparent">
-              <pre className="text-[13px] font-mono text-[#94a3b8] whitespace-pre-wrap leading-relaxed">
+            <div className="bg-[#111827] border border-[#1e293b] rounded-[12px] p-4 sm:p-5 max-h-[400px] overflow-y-auto">
+              <pre className="text-[13px] font-mono text-[#94a3b8] whitespace-pre-wrap leading-relaxed break-words">
                 {brief}
               </pre>
             </div>
 
             {/* Action buttons */}
-            <div className="flex items-center gap-3 mt-5">
+            <div className="flex flex-wrap items-center gap-3 mt-5">
               <button
                 onClick={handleCopy}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-[10px] text-[13px] font-medium transition-all duration-200 ${
                   copied
                     ? "bg-[#4ade80]/10 text-[#4ade80] border border-[#4ade80]/30"
-                    : "bg-[#111827] text-[#94a3b8] border border-[#1e293b] hover:border-[#6366f1]/50 hover:text-[#f1f5f9]"
+                    : "bg-[#111827] text-[#94a3b8] border border-[#1e293b] hover:border-[#f59e0b]/50 hover:text-[#f1f5f9]"
                 }`}
               >
                 {copied ? (
@@ -186,7 +191,7 @@ export default function BriefGenerator({ opportunity, onClose }: BriefGeneratorP
 
               <button
                 onClick={handleLaunch}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-[10px] text-[13px] font-medium bg-[#6366f1] text-white hover:bg-[#818cf8] transition-all duration-200 shadow-lg shadow-[#6366f1]/20"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-[10px] text-[13px] font-medium bg-[#f59e0b] text-[#020617] hover:bg-[#fbbf24] transition-all duration-200 shadow-lg shadow-[#f59e0b]/20"
               >
                 <span>Lancer dans Claude</span>
               </button>

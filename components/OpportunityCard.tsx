@@ -15,7 +15,7 @@ interface OpportunityCardProps {
 
 function getVerdict(total: number): { label: string; color: string } {
   if (total >= 42) return { label: "Opportunit\u00e9 exceptionnelle", color: "#4ade80" };
-  if (total >= 35) return { label: "Tr\u00e8s prometteur", color: "#6366f1" };
+  if (total >= 35) return { label: "Tr\u00e8s prometteur", color: "#f59e0b" };
   if (total >= 28) return { label: "Int\u00e9ressant", color: "#fbbf24" };
   return { label: "\u00c0 surveiller", color: "#94a3b8" };
 }
@@ -28,7 +28,7 @@ export default function OpportunityCard({
 }: OpportunityCardProps) {
   const [expanded, setExpanded] = useState(false);
 
-  const signal = SIGNAL_CONFIG[opportunity.signal_type] || { label: opportunity.signal_type || 'Signal', color: '#6366f1', icon: '📡' };
+  const signal = SIGNAL_CONFIG[opportunity.signal_type] || { label: opportunity.signal_type || 'Signal', color: '#f59e0b', icon: '\uD83D\uDCE1' };
   const totalScore =
     opportunity.scores.urgence +
     opportunity.scores.faisabilite +
@@ -44,7 +44,7 @@ export default function OpportunityCard({
     >
       <div
         className={`
-          bg-[#0c1222] border rounded-[16px] p-5
+          bg-[#0c1222] border rounded-[16px] p-4 sm:p-5
           transition-all duration-200
           ${expanded ? "border-[#334155] shadow-lg shadow-black/20" : "border-[#1e293b]"}
           hover:border-[#334155] hover:shadow-lg hover:shadow-black/10
@@ -54,11 +54,11 @@ export default function OpportunityCard({
         <button
           type="button"
           onClick={() => setExpanded((prev) => !prev)}
-          className="w-full flex items-center gap-4 text-left cursor-pointer"
+          className="w-full flex items-center gap-3 sm:gap-4 text-left cursor-pointer"
         >
           {/* Signal icon */}
           <div
-            className="flex-shrink-0 w-[44px] h-[44px] rounded-[12px] flex items-center justify-center text-2xl"
+            className="flex-shrink-0 w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] rounded-[12px] flex items-center justify-center text-xl sm:text-2xl"
             style={{ backgroundColor: `${signal.color}26` }}
           >
             {signal.icon}
@@ -66,18 +66,18 @@ export default function OpportunityCard({
 
           {/* Name + tagline */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-[16px] font-bold text-[#f1f5f9] truncate">
+            <h3 className="text-[14px] sm:text-[16px] font-bold text-[#f1f5f9] truncate">
               {opportunity.name}
             </h3>
-            <p className="text-[13px] italic text-[#94a3b8] truncate">
+            <p className="text-[12px] sm:text-[13px] italic text-[#94a3b8] truncate">
               {opportunity.tagline}
             </p>
           </div>
 
-          {/* Badges */}
-          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+          {/* Badges — desktop */}
+          <div className="hidden sm:flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
             {/* Score badge */}
-            <span className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[10px] font-semibold bg-[#6366f1]/15 text-[#6366f1]">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[10px] font-semibold bg-[#f59e0b]/15 text-[#f59e0b]">
               {totalScore}/50
             </span>
 
@@ -115,12 +115,12 @@ export default function OpportunityCard({
         {/* ── EXPANDED CONTENT ── */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            expanded ? "max-h-[2000px] opacity-100 mt-6" : "max-h-0 opacity-0"
+            expanded ? "max-h-[2000px] opacity-100 mt-5" : "max-h-0 opacity-0"
           }`}
         >
           {/* ── Mobile badges (visible only on small screens when expanded) ── */}
           <div className="flex sm:hidden flex-wrap items-center gap-2 mb-5">
-            <span className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[10px] font-semibold bg-[#6366f1]/15 text-[#6366f1]">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[10px] font-semibold bg-[#f59e0b]/15 text-[#f59e0b]">
               {totalScore}/50
             </span>
             <span
@@ -142,7 +142,7 @@ export default function OpportunityCard({
 
           {/* ── Section 1: Pourquoi maintenant ? ── */}
           <div className="mb-6">
-            <h4 className="text-[16px] font-bold text-[#f1f5f9] mb-4">
+            <h4 className="text-[15px] sm:text-[16px] font-bold text-[#f1f5f9] mb-4">
               {"\uD83D\uDCE1"} Pourquoi maintenant ?
             </h4>
 
@@ -157,7 +157,7 @@ export default function OpportunityCard({
               >
                 Signal
               </span>
-              <p className="text-[13px] text-[#94a3b8] mt-1">
+              <p className="text-[13px] text-[#94a3b8] mt-1 break-words">
                 {opportunity.justification.signal}
               </p>
             </div>
@@ -167,7 +167,7 @@ export default function OpportunityCard({
               <span className="text-[11px] font-bold uppercase tracking-wide text-[#fbbf24]">
                 Timing
               </span>
-              <p className="text-[13px] text-[#94a3b8] mt-1">
+              <p className="text-[13px] text-[#94a3b8] mt-1 break-words">
                 {opportunity.justification.timing}
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function OpportunityCard({
               <span className="text-[11px] font-bold uppercase tracking-wide text-[#4ade80]">
                 Preuve march{"\u00e9"}
               </span>
-              <p className="text-[13px] text-[#94a3b8] mt-1">
+              <p className="text-[13px] text-[#94a3b8] mt-1 break-words">
                 {opportunity.justification.market_proof}
               </p>
             </div>
@@ -185,14 +185,14 @@ export default function OpportunityCard({
 
           {/* ── Section 2: Le projet ── */}
           <div className="mb-6">
-            <h4 className="text-[16px] font-bold text-[#f1f5f9] mb-4">
+            <h4 className="text-[15px] sm:text-[16px] font-bold text-[#f1f5f9] mb-4">
               {"\uD83C\uDFD7\uFE0F"} Le projet
             </h4>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* LEFT column */}
-              <div>
-                <p className="text-[13px] text-[#94a3b8] mb-4">
+              <div className="min-w-0">
+                <p className="text-[13px] text-[#94a3b8] mb-4 break-words">
                   {opportunity.project.description}
                 </p>
 
@@ -204,11 +204,11 @@ export default function OpportunityCard({
                     { label: "Stack", value: opportunity.project.stack },
                     { label: "Build time", value: opportunity.project.build_time },
                   ].map((row) => (
-                    <div key={row.label}>
+                    <div key={row.label} className="min-w-0">
                       <span className="text-[11px] text-[#64748b] uppercase tracking-wide font-medium">
                         {row.label}
                       </span>
-                      <p className="text-[13px] text-[#f1f5f9] mt-0.5">
+                      <p className="text-[13px] text-[#f1f5f9] mt-0.5 break-words">
                         {row.value}
                       </p>
                     </div>
@@ -224,7 +224,7 @@ export default function OpportunityCard({
                     {opportunity.project.mvp_features.map((feature) => (
                       <span
                         key={feature}
-                        className="bg-[#111827] text-[#94a3b8] text-[10px] px-2.5 py-1 rounded-[6px]"
+                        className="bg-[#111827] text-[#94a3b8] text-[10px] px-2.5 py-1 rounded-[6px] break-words"
                       >
                         {feature}
                       </span>
@@ -252,14 +252,14 @@ export default function OpportunityCard({
           </div>
 
           {/* ── Section 3: Actions ── */}
-          <div className="flex items-center gap-3 pt-4 border-t border-[#1e293b]">
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-[#1e293b]">
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onLaunch(opportunity);
               }}
-              className="bg-[#6366f1] text-white font-semibold px-5 py-2.5 rounded-[10px] transition-all duration-150 hover:brightness-110 active:scale-[0.98] cursor-pointer"
+              className="bg-[#f59e0b] text-[#020617] font-semibold px-5 py-2.5 rounded-[10px] transition-all duration-150 hover:bg-[#fbbf24] active:scale-[0.98] cursor-pointer"
             >
               {"\uD83D\uDE80"} Lancer
             </button>

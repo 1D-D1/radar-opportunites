@@ -13,7 +13,7 @@ interface ScoreRadarProps {
   size?: number;
 }
 
-const LABELS = ["Urgence", "Faisabilité", "Rentabilité", "Compétition", "Timing"];
+const LABELS = ["Urgence", "Faisabilit\u00e9", "Rentabilit\u00e9", "Comp\u00e9tition", "Timing"];
 const KEYS: (keyof ScoreRadarProps["scores"])[] = [
   "urgence",
   "faisabilite",
@@ -107,15 +107,15 @@ export default function ScoreRadar({ scores, size = 200 }: ScoreRadarProps) {
       {/* Data polygon */}
       <polygon
         points={dataPolygonPoints}
-        fill="rgba(99, 102, 241, 0.2)"
-        stroke="#6366f1"
+        fill="rgba(245, 158, 11, 0.2)"
+        stroke="#f59e0b"
         strokeWidth={2}
         strokeLinejoin="round"
       />
 
       {/* Data points */}
       {dataPoints.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={3.5} fill="#6366f1" />
+        <circle key={i} cx={x} cy={y} r={3.5} fill="#f59e0b" />
       ))}
 
       {/* Labels */}
@@ -124,17 +124,12 @@ export default function ScoreRadar({ scores, size = 200 }: ScoreRadarProps) {
         let textAnchor: "middle" | "start" | "end" = "middle";
         let dy = 0;
 
-        // Top label
         if (i === 0) {
           dy = -4;
-        }
-        // Right-side labels
-        else if (i === 1 || i === 4) {
+        } else if (i === 1 || i === 4) {
           textAnchor = i === 1 ? "start" : "end";
           dy = 4;
-        }
-        // Bottom labels
-        else if (i === 2 || i === 3) {
+        } else if (i === 2 || i === 3) {
           textAnchor = i === 2 ? "start" : "end";
           dy = 12;
         }

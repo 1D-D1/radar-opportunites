@@ -8,10 +8,10 @@ interface PricingGateProps {
 }
 
 const benefits = [
-  "Scans illimités",
+  "Scans illimit\u00e9s",
   "Historique complet",
   "Favoris & filtres",
-  "Briefs illimités",
+  "Briefs illimit\u00e9s",
 ];
 
 export default function PricingGate({
@@ -27,11 +27,11 @@ export default function PricingGate({
   const usagePercent = Math.min((scansUsed / scansLimit) * 100, 100);
 
   return (
-    <div className="bg-gradient-to-br from-[#0c1222] to-[#111827] border border-[#6366f1]/30 rounded-[16px] p-6 shadow-lg shadow-[#6366f1]/10">
+    <div className="bg-gradient-to-br from-[#0c1222] to-[#111827] border border-[#f59e0b]/30 rounded-[16px] p-6 shadow-lg shadow-[#f59e0b]/10 mt-6">
       {/* Icon */}
       <div className="text-center mb-4">
-        <span className="text-4xl" role="img" aria-label="Verrouillé">
-          🔒
+        <span className="text-4xl" role="img" aria-label="Verrouille">
+          {"\uD83D\uDD12"}
         </span>
       </div>
 
@@ -42,7 +42,7 @@ export default function PricingGate({
 
       {/* Subtitle */}
       <p className="text-[13px] text-[#94a3b8] text-center mb-5">
-        Vous avez utilisé vos {scansLimit} scans gratuits ce mois-ci
+        Vous avez utilise vos {scansLimit} scans gratuits ce mois-ci
       </p>
 
       {/* Usage bar */}
@@ -55,7 +55,7 @@ export default function PricingGate({
         </div>
         <div className="bg-[#111827] rounded-full h-2 overflow-hidden">
           <div
-            className="bg-[#6366f1] h-full rounded-full transition-all duration-500"
+            className="bg-[#f59e0b] h-full rounded-full transition-all duration-500"
             style={{ width: `${usagePercent}%` }}
           />
         </div>
@@ -64,16 +64,16 @@ export default function PricingGate({
       {/* CTA Button */}
       <button
         onClick={onUpgrade}
-        className="mt-5 w-full py-3 bg-[#6366f1] text-white font-semibold rounded-[10px] hover:bg-[#818cf8] active:scale-[0.98] transition-all duration-200 cursor-pointer"
+        className="mt-5 w-full py-3 bg-[#f59e0b] text-[#020617] font-semibold rounded-[10px] hover:bg-[#fbbf24] active:scale-[0.98] transition-all duration-200 cursor-pointer"
       >
-        Passer au Pro — 29€/mois
+        Passer au Pro — 29&euro;/mois
       </button>
 
       {/* Benefits list */}
       <ul className="mt-5 space-y-2.5">
         {benefits.map((benefit) => (
           <li key={benefit} className="flex items-center gap-2">
-            <span className="text-[#4ade80] text-[14px] font-bold">✓</span>
+            <span className="text-[#4ade80] text-[14px] font-bold">&#10003;</span>
             <span className="text-[13px] text-[#94a3b8]">{benefit}</span>
           </li>
         ))}

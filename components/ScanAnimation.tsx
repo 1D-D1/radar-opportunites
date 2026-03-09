@@ -33,7 +33,7 @@ export default function ScanAnimation() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-primary">
       <div className="flex w-full max-w-[480px] flex-col items-center gap-10 px-6">
-        {/* Radar SVG */}
+        {/* Lighthouse SVG */}
         <div className="relative flex items-center justify-center">
           <svg
             width="200"
@@ -41,61 +41,78 @@ export default function ScanAnimation() {
             viewBox="0 0 200 200"
             className="overflow-visible"
           >
-            {/* Pulsing concentric circles */}
-            <circle
-              cx="100"
-              cy="100"
-              r="90"
-              fill="none"
-              stroke="#6366f1"
-              strokeOpacity="0.1"
-              strokeWidth="1"
-            >
+            {/* Ambient glow */}
+            <circle cx="100" cy="60" r="80" fill="url(#lighthouseGlow)" opacity="0.3">
               <animate
-                attributeName="stroke-opacity"
-                values="0.1;0.25;0.1"
+                attributeName="opacity"
+                values="0.2;0.4;0.2"
                 dur="3s"
                 repeatCount="indefinite"
               />
             </circle>
-            <circle
-              cx="100"
-              cy="100"
-              r="65"
-              fill="none"
-              stroke="#6366f1"
-              strokeOpacity="0.15"
-              strokeWidth="1"
-            >
-              <animate
-                attributeName="stroke-opacity"
-                values="0.15;0.35;0.15"
-                dur="2.5s"
-                repeatCount="indefinite"
-              />
-            </circle>
-            <circle
-              cx="100"
-              cy="100"
-              r="40"
-              fill="none"
-              stroke="#6366f1"
-              strokeOpacity="0.2"
-              strokeWidth="1"
-            >
-              <animate
-                attributeName="stroke-opacity"
-                values="0.2;0.45;0.2"
-                dur="2s"
-                repeatCount="indefinite"
-              />
-            </circle>
 
-            {/* Center dot */}
-            <circle cx="100" cy="100" r="4" fill="#6366f1">
+            {/* Light beam (sweep) */}
+            <defs>
+              <radialGradient id="lighthouseGlow" cx="50%" cy="30%" r="50%">
+                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="beamGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+
+            {/* Beam cone that rotates */}
+            <g style={{ transformOrigin: "100px 75px" }}>
+              <path
+                d="M100,75 L60,10 A50,50 0 0,1 140,10 Z"
+                fill="url(#beamGradient)"
+                opacity="0.2"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 100 75"
+                  to="360 100 75"
+                  dur="3s"
+                  repeatCount="indefinite"
+                />
+              </path>
+            </g>
+
+            {/* Beam line */}
+            <line
+              x1="100"
+              y1="75"
+              x2="100"
+              y2="10"
+              stroke="#f59e0b"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.6"
+            >
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 100 75"
+                to="360 100 75"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+            </line>
+
+            {/* Lighthouse body */}
+            <rect x="88" y="80" width="24" height="50" rx="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="1" strokeOpacity="0.4" />
+
+            {/* Lighthouse top (lantern room) */}
+            <rect x="84" y="70" width="32" height="14" rx="4" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" strokeOpacity="0.6" />
+
+            {/* Light source */}
+            <circle cx="100" cy="77" r="5" fill="#f59e0b">
               <animate
                 attributeName="r"
-                values="3;5;3"
+                values="4;6;4"
                 dur="2s"
                 repeatCount="indefinite"
               />
@@ -107,58 +124,45 @@ export default function ScanAnimation() {
               />
             </circle>
 
-            {/* Radar sweep line with gradient trail */}
-            <defs>
-              <linearGradient
-                id="sweepGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                <stop offset="0%" stopColor="#6366f1" stopOpacity="0" />
-                <stop offset="100%" stopColor="#6366f1" stopOpacity="0.9" />
-              </linearGradient>
-            </defs>
+            {/* Lighthouse stripes */}
+            <rect x="88" y="92" width="24" height="4" fill="#f59e0b" opacity="0.15" />
+            <rect x="88" y="104" width="24" height="4" fill="#f59e0b" opacity="0.15" />
+            <rect x="88" y="116" width="24" height="4" fill="#f59e0b" opacity="0.15" />
 
-            {/* Sweep cone / trail */}
-            <g style={{ transformOrigin: "100px 100px" }}>
-              <path
-                d="M100,100 L100,10 A90,90 0 0,1 163.6,36.4 Z"
-                fill="url(#sweepGradient)"
-                opacity="0.15"
-              >
-                <animateTransform
-                  attributeName="transform"
-                  type="rotate"
-                  from="0 100 100"
-                  to="360 100 100"
-                  dur="3s"
-                  repeatCount="indefinite"
-                />
-              </path>
-            </g>
+            {/* Base */}
+            <rect x="78" y="130" width="44" height="8" rx="3" fill="#1e293b" stroke="#f59e0b" strokeWidth="0.5" strokeOpacity="0.3" />
 
-            {/* Sweep line */}
-            <line
-              x1="100"
-              y1="100"
-              x2="100"
-              y2="10"
-              stroke="#6366f1"
-              strokeWidth="2"
+            {/* Waves */}
+            <path
+              d="M50 155 Q65 148 80 155 Q95 162 110 155 Q125 148 140 155 Q155 162 170 155"
+              fill="none"
+              stroke="#f59e0b"
+              strokeWidth="1.5"
+              strokeOpacity="0.2"
               strokeLinecap="round"
-              opacity="0.8"
             >
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                from="0 100 100"
-                to="360 100 100"
-                dur="3s"
+              <animate
+                attributeName="d"
+                values="M50 155 Q65 148 80 155 Q95 162 110 155 Q125 148 140 155 Q155 162 170 155;M50 155 Q65 162 80 155 Q95 148 110 155 Q125 162 140 155 Q155 148 170 155;M50 155 Q65 148 80 155 Q95 162 110 155 Q125 148 140 155 Q155 162 170 155"
+                dur="4s"
                 repeatCount="indefinite"
               />
-            </line>
+            </path>
+            <path
+              d="M40 165 Q60 158 80 165 Q100 172 120 165 Q140 158 160 165"
+              fill="none"
+              stroke="#f59e0b"
+              strokeWidth="1"
+              strokeOpacity="0.1"
+              strokeLinecap="round"
+            >
+              <animate
+                attributeName="d"
+                values="M40 165 Q60 158 80 165 Q100 172 120 165 Q140 158 160 165;M40 165 Q60 172 80 165 Q100 158 120 165 Q140 172 160 165;M40 165 Q60 158 80 165 Q100 172 120 165 Q140 158 160 165"
+                dur="5s"
+                repeatCount="indefinite"
+              />
+            </path>
 
             {/* Outer ring */}
             <circle
@@ -166,18 +170,18 @@ export default function ScanAnimation() {
               cy="100"
               r="92"
               fill="none"
-              stroke="#6366f1"
-              strokeOpacity="0.3"
-              strokeWidth="1.5"
+              stroke="#f59e0b"
+              strokeOpacity="0.08"
+              strokeWidth="1"
             />
           </svg>
 
-          {/* Glow effect behind radar */}
+          {/* Glow effect behind lighthouse */}
           <div
             className="pointer-events-none absolute inset-0 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)",
+                "radial-gradient(circle at 50% 40%, rgba(245,158,11,0.12) 0%, transparent 60%)",
             }}
           />
         </div>
@@ -202,8 +206,8 @@ export default function ScanAnimation() {
               style={{
                 backgroundColor:
                   index <= currentPhase
-                    ? "#6366f1"
-                    : "rgba(99, 102, 241, 0.15)",
+                    ? "#f59e0b"
+                    : "rgba(245, 158, 11, 0.15)",
               }}
             />
           ))}

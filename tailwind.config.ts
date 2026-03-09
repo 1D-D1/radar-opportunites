@@ -17,8 +17,14 @@ const config: Config = {
         'text-primary': '#f1f5f9',
         'text-secondary': '#94a3b8',
         'text-tertiary': '#64748b',
+        // PHAROS amber/gold palette
+        'accent-amber': '#f59e0b',
+        'accent-gold': '#fbbf24',
+        'accent-deep': '#d97706',
+        // Legacy (keep for signal colors)
         'accent-indigo': '#6366f1',
         'accent-violet': '#8b5cf6',
+        // Signal colors
         'signal-reglementation': '#f43f5e',
         'signal-tendance': '#8b5cf6',
         'signal-friction': '#f59e0b',
@@ -44,6 +50,8 @@ const config: Config = {
         'scale-in': 'scaleIn 0.2s ease-out forwards',
         'pulse-slow': 'pulse 2s ease-in-out infinite',
         'spin-slow': 'spin 2s linear infinite',
+        'beam-sweep': 'beamSweep 3s linear infinite',
+        'glow-pulse': 'glowPulse 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -57,6 +65,14 @@ const config: Config = {
         scaleIn: {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        beamSweep: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        glowPulse: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
         },
       },
     },

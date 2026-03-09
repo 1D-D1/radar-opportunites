@@ -7,6 +7,7 @@ import MarketPulse from '@/components/MarketPulse';
 import OpportunityCard from '@/components/OpportunityCard';
 import BriefGenerator from '@/components/BriefGenerator';
 import PricingGate from '@/components/PricingGate';
+import ScanHistory from '@/components/ScanHistory';
 import type { Opportunity, Profile } from '@/types/opportunity';
 import type { User } from '@supabase/supabase-js';
 
@@ -36,6 +37,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [showBrief, setShowBrief] = useState<Opportunity | null>(null);
   const [savedToast, setSavedToast] = useState(false);
+  const [scanHistory, setScanHistory] = useState<any[]>([]);
 
   // ── Start a new scan ──────────────────────────────────────────
   const startScan = useCallback(async () => {
@@ -112,6 +114,19 @@ export default function DashboardPage() {
     [startScan]
   );
 
+  // ── Load scan history (pro) ─────────────────────────────────
+  const loadScanHistory = useCallback(async (userId: string) => {
+    const { data: history } = await supabase
+      .from('scans')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('status', 'completed')
+      .order('scan_date', { ascending: false })
+      .limit(10);
+
+    if (history) setScanHistory(history);
+  }, []);
+
   // ── Auth + profile check on mount ─────────────────────────────
   useEffect(() => {
     async function init() {
@@ -135,13 +150,16 @@ export default function DashboardPage() {
       const prof = profileData ? (profileData as Profile) : null;
       if (prof) {
         setProfile(prof);
+        if (prof.plan === 'pro') {
+          loadScanHistory(authUser.id);
+        }
       }
 
       loadLastScan(authUser.id, prof);
     }
 
     init();
-  }, [loadLastScan]);
+  }, [loadLastScan, loadScanHistory]);
 
   // ── Save an opportunity ───────────────────────────────────────
   async function handleSave(opportunity: Opportunity) {
@@ -178,6 +196,19 @@ export default function DashboardPage() {
     window.location.href = '/';
   }
 
+  // ── Select scan from history ──────────────────────────────────
+  function handleSelectScan(scanId: string) {
+    const scan = scanHistory.find((s) => s.id === scanId);
+    if (scan) {
+      setCurrentScan({
+        market_pulse: scan.market_pulse,
+        opportunities: scan.opportunities,
+        scan_date: scan.scan_date,
+      });
+      setCurrentScanId(scan.id);
+    }
+  }
+
   // ── Quota gate check ──────────────────────────────────────────
   const quotaReached =
     profile?.plan === 'free' &&
@@ -197,19 +228,16 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#020617]">
       <div className="max-w-[960px] mx-auto px-4 py-6">
         {/* ═══ HEADER ═══ */}
-        <header className="flex justify-between items-center mb-6 border-b border-[#1e293b] pb-4">
+        <header className="flex flex-wrap justify-between items-center mb-6 border-b border-[#1e293b] pb-4 gap-3">
           {/* Left: Logo */}
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
-              RADAR
-            </span>
-            <span className="text-sm font-medium text-[#f1f5f9] tracking-wider">
-              OPPORTUNITES
+            <span className="text-2xl font-extrabold bg-gradient-to-r from-[#f59e0b] to-[#fbbf24] bg-clip-text text-transparent tracking-tight">
+              PHAROS
             </span>
           </div>
 
           {/* Center: Date */}
-          <div className="hidden sm:block text-sm text-[#94a3b8] capitalize">
+          <div className="hidden sm:block text-sm text-[#94a3b8] capitalize order-last sm:order-none w-full sm:w-auto text-center">
             {formatDateFr(new Date())}
           </div>
 
@@ -218,13 +246,13 @@ export default function DashboardPage() {
             <button
               onClick={() => startScan()}
               disabled={isScanning || quotaReached}
-              className="px-3 py-1.5 text-sm rounded-[8px] bg-[#6366f1]/10 text-[#6366f1] border border-[#6366f1]/20 hover:bg-[#6366f1]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-3 py-1.5 text-sm rounded-[8px] bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20 hover:bg-[#f59e0b]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isScanning ? 'Scan en cours...' : 'Re-scanner'}
             </button>
 
             <div className="relative group">
-              <div className="w-8 h-8 rounded-full bg-[#6366f1] flex items-center justify-center text-white text-sm font-medium cursor-pointer">
+              <div className="w-8 h-8 rounded-full bg-[#f59e0b] flex items-center justify-center text-[#020617] text-sm font-bold cursor-pointer">
                 {user.email?.charAt(0).toUpperCase() ?? '?'}
               </div>
 
@@ -250,7 +278,7 @@ export default function DashboardPage() {
         {/* ═══ ERROR ═══ */}
         {error && (
           <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-[12px] p-4 mb-6">
-            <p className="text-[#f87171] text-sm">{error}</p>
+            <p className="text-[#f87171] text-sm break-words">{error}</p>
           </div>
         )}
 
@@ -294,21 +322,19 @@ export default function DashboardPage() {
           />
         )}
 
-        {/* ═══ SCAN HISTORY LINK ═══ */}
-        {profile?.plan === 'pro' && !isScanning && (
-          <div className="mt-8 text-center">
-            <a
-              href="/scan"
-              className="text-sm text-[#6366f1] hover:text-[#8b5cf6] transition-colors"
-            >
-              Voir l&apos;historique des scans
-            </a>
+        {/* ═══ SCAN HISTORY (pro users) ═══ */}
+        {profile?.plan === 'pro' && !isScanning && scanHistory.length > 1 && (
+          <div className="mt-8 bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-5">
+            <ScanHistory
+              scans={scanHistory}
+              onSelectScan={handleSelectScan}
+            />
           </div>
         )}
 
         {/* ═══ SAVED TOAST ═══ */}
         {savedToast && (
-          <div className="fixed bottom-6 right-6 bg-[#10b981]/20 border border-[#10b981]/30 text-[#10b981] px-4 py-2 rounded-[8px] text-sm animate-pulse z-50">
+          <div className="fixed bottom-6 right-6 bg-[#10b981]/20 border border-[#10b981]/30 text-[#10b981] px-4 py-2 rounded-[8px] text-sm z-50 animate-fade-in">
             Opportunite sauvegardee
           </div>
         )}

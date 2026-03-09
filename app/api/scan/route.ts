@@ -3,6 +3,7 @@ import { createServerSupabaseClient, createServiceRoleClient } from '@/lib/supab
 import { runOpportunityScan } from '@/lib/anthropic';
 import type { ScanResult } from '@/types/opportunity';
 import { normalizeSignalType } from '@/types/opportunity';
+import type { UserScanProfile } from '@/lib/anthropic';
 
 export const maxDuration = 120; // Allow up to 2 minutes for scan
 
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
-    // Get profile to check quota
+    // Get profile to check quota + personalization
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
@@ -67,8 +68,22 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      // Run the scan via Anthropic API
-      const rawResult = await runOpportunityScan();
+      // Build user profile for personalization
+      const userProfile: UserScanProfile = {
+        display_name: profile.display_name || null,
+        interests: profile.interests || [],
+        skills: profile.skills || [],
+        project_goals: profile.project_goals || null,
+      };
+
+      // Only pass profile if onboarding was completed and there's actual data
+      const hasProfileData =
+        (userProfile.interests && userProfile.interests.length > 0) ||
+        (userProfile.skills && userProfile.skills.length > 0) ||
+        userProfile.project_goals;
+
+      // Run the scan via Anthropic API (with optional personalization)
+      const rawResult = await runOpportunityScan(hasProfileData ? userProfile : undefined);
 
       // Parse JSON from response (handle potential wrapper text)
       let scanResult: ScanResult;

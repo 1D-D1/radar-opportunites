@@ -5,9 +5,9 @@ import Link from "next/link";
 const steps = [
   {
     number: "01",
-    icon: "\uD83D\uDD0D",
-    title: "Scan automatique",
-    text: "L\u2019IA analyse les tendances, r\u00e9glementations et frictions du march\u00e9 en temps r\u00e9el",
+    icon: "\uD83D\uDD2D",
+    title: "Scan intelligent",
+    text: "PHAROS analyse les tendances, r\u00e9glementations et frictions du march\u00e9 en temps r\u00e9el",
   },
   {
     number: "02",
@@ -18,8 +18,8 @@ const steps = [
   {
     number: "03",
     icon: "\uD83D\uDE80",
-    title: "Protocole pr\u00eat",
-    text: "Un mega-prompt complet pour Claude Code. Copiez, collez, lancez.",
+    title: "Protocole Claude Code",
+    text: "Un mega-prompt complet pour Claude Code. Copiez, collez, lancez votre projet.",
   },
 ];
 
@@ -36,7 +36,7 @@ const proFeatures = [
   { label: "Briefs illimit\u00e9s", included: true },
   { label: "Historique complet", included: true },
   { label: "Favoris et filtres", included: true },
-  { label: "Support prioritaire", included: true },
+  { label: "Scans personnalis\u00e9s", included: true },
 ];
 
 export default function Home() {
@@ -46,40 +46,74 @@ export default function Home() {
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
         {/* Animated gradient background */}
         <div
-          className="absolute inset-0 animate-pulse"
+          className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse at center, #0c1222 0%, #020617 70%)",
-            animationDuration: "6s",
+              "radial-gradient(ellipse at 50% 30%, rgba(245,158,11,0.06) 0%, transparent 60%), radial-gradient(ellipse at center, #0c1222 0%, #020617 70%)",
+          }}
+        />
+
+        {/* Lighthouse glow effect */}
+        <div
+          className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[300px] h-[300px] rounded-full animate-glow-pulse pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%)",
           }}
         />
 
         <div className="relative z-10 flex flex-col items-center gap-6 max-w-[700px] text-center">
+          {/* Lighthouse SVG icon */}
+          <div className="mb-2">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Lighthouse beam */}
+              <path d="M24 8L38 16L24 12L10 16L24 8Z" fill="#f59e0b" opacity="0.3">
+                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
+              </path>
+              {/* Lighthouse body */}
+              <rect x="20" y="12" width="8" height="20" rx="2" fill="#f59e0b" />
+              {/* Lighthouse top */}
+              <rect x="18" y="10" width="12" height="4" rx="2" fill="#fbbf24" />
+              {/* Lighthouse light */}
+              <circle cx="24" cy="12" r="3" fill="#fbbf24">
+                <animate attributeName="r" values="2.5;3.5;2.5" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+              </circle>
+              {/* Lighthouse base */}
+              <rect x="16" y="32" width="16" height="4" rx="1" fill="#d97706" />
+              {/* Waves */}
+              <path d="M8 40C12 38 16 42 20 40C24 38 28 42 32 40C36 38 40 42 44 40" stroke="#f59e0b" strokeWidth="1.5" opacity="0.4" strokeLinecap="round">
+                <animate attributeName="d" values="M8 40C12 38 16 42 20 40C24 38 28 42 32 40C36 38 40 42 44 40;M8 40C12 42 16 38 20 40C24 42 28 38 32 40C36 42 40 38 44 40;M8 40C12 38 16 42 20 40C24 38 28 42 32 40C36 38 40 42 44 40" dur="4s" repeatCount="indefinite" />
+              </path>
+            </svg>
+          </div>
+
           {/* Badge */}
-          <span className="bg-[#6366f1]/10 text-[#6366f1] rounded-full px-4 py-1.5 text-[12px] font-semibold">
-            {"\uD83D\uDD0D"} Propuls{"\u00e9"} par Claude AI
+          <span className="bg-[#f59e0b]/10 text-[#f59e0b] rounded-full px-4 py-1.5 text-[12px] font-semibold tracking-wide">
+            Partenaire Claude Code
           </span>
 
           {/* Main title */}
-          <h1 className="text-[36px] sm:text-[48px] font-extrabold leading-tight">
-            D{"\u00e9"}tectez votre prochain
+          <h1 className="text-[36px] sm:text-[52px] font-extrabold leading-[1.1] tracking-tight">
+            <span className="bg-gradient-to-r from-[#f59e0b] to-[#fbbf24] bg-clip-text text-transparent">
+              PHAROS
+            </span>
             <br />
-            <span className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
-              projet digital
+            <span className="text-[22px] sm:text-[28px] font-semibold text-[#94a3b8]">
+              Le phare des opportunit{"\u00e9"}s
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[16px] sm:text-[18px] text-[#94a3b8] max-w-[600px]">
-            L&apos;IA scanne le web en temps r{"\u00e9"}el, identifie les
-            opportunit{"\u00e9"}s business, et g{"\u00e9"}n{"\u00e8"}re le
-            protocole complet pour lancer votre projet avec Claude Code.
+          <p className="text-[15px] sm:text-[17px] text-[#94a3b8] max-w-[540px] leading-relaxed">
+            Scannez le march{"\u00e9"} en temps r{"\u00e9"}el. Identifiez les projets
+            porteurs. G{"\u00e9"}n{"\u00e9"}rez le protocole complet pour lancer
+            avec Claude Code.
           </p>
 
           {/* CTA button */}
           <Link
             href="/auth/login"
-            className="bg-[#6366f1] text-white font-bold text-[16px] px-8 py-4 rounded-[12px] hover:brightness-110 transition shadow-lg shadow-[#6366f1]/25"
+            className="bg-[#f59e0b] text-[#020617] font-bold text-[15px] px-8 py-4 rounded-[12px] hover:bg-[#fbbf24] transition-all shadow-lg shadow-[#f59e0b]/20 active:scale-[0.98]"
           >
             Commencer gratuitement {"\u2192"}
           </Link>
@@ -87,7 +121,7 @@ export default function Home() {
           {/* Secondary link */}
           <Link
             href="/auth/login"
-            className="text-[#64748b] hover:text-[#94a3b8] transition text-[14px]"
+            className="text-[#64748b] hover:text-[#f59e0b] transition text-[14px]"
           >
             D{"\u00e9"}j{"\u00e0"} un compte ? Se connecter
           </Link>
@@ -104,9 +138,9 @@ export default function Home() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-6 text-center"
+              className="bg-[#0c1222] border border-[#1e293b] rounded-[16px] p-6 text-center hover:border-[#f59e0b]/30 transition-colors"
             >
-              <div className="text-[#6366f1] text-[48px] font-extrabold opacity-20 leading-none">
+              <div className="text-[#f59e0b] text-[48px] font-extrabold opacity-20 leading-none">
                 {step.number}
               </div>
               <div className="text-[36px] mt-2">{step.icon}</div>
@@ -167,15 +201,15 @@ export default function Home() {
           </div>
 
           {/* PRO Card */}
-          <div className="relative bg-[#0c1222] border border-[#6366f1] rounded-[16px] p-6 shadow-lg shadow-[#6366f1]/20 flex flex-col">
+          <div className="relative bg-[#0c1222] border border-[#f59e0b]/40 rounded-[16px] p-6 shadow-lg shadow-[#f59e0b]/10 flex flex-col">
             {/* Popular badge */}
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#6366f1] text-white text-[11px] font-bold uppercase px-3 py-1 rounded-full">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#f59e0b] text-[#020617] text-[11px] font-bold uppercase px-3 py-1 rounded-full">
               Populaire
             </span>
 
             <h3 className="text-[18px] font-bold text-[#f1f5f9]">Pro</h3>
             <div className="mt-3 flex items-baseline gap-1">
-              <span className="text-[36px] font-extrabold bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
+              <span className="text-[36px] font-extrabold bg-gradient-to-r from-[#f59e0b] to-[#fbbf24] bg-clip-text text-transparent">
                 29{"\u20AC"}
               </span>
               <span className="text-[#64748b] text-[14px]">/mois</span>
@@ -195,7 +229,7 @@ export default function Home() {
 
             <Link
               href="/auth/login"
-              className="mt-6 bg-[#6366f1] text-white font-semibold text-center w-full py-3 rounded-[10px] hover:brightness-110 transition block"
+              className="mt-6 bg-[#f59e0b] text-[#020617] font-semibold text-center w-full py-3 rounded-[10px] hover:bg-[#fbbf24] transition block"
             >
               Commencer avec Pro {"\u2192"}
             </Link>
@@ -206,8 +240,8 @@ export default function Home() {
       {/* ==================== SECTION 4 - FOOTER ==================== */}
       <footer className="text-[#64748b] text-[13px] text-center py-8 border-t border-[#1e293b]">
         <p>
-          Radar Opportunit{"\u00e9"}s &middot; Propuls{"\u00e9"} par Claude AI
-          &middot; 2026
+          <span className="text-[#f59e0b] font-semibold">PHAROS</span>
+          {" "}&middot;{" "}Partenaire Claude Code{" "}&middot;{" "}2026
         </p>
       </footer>
     </div>

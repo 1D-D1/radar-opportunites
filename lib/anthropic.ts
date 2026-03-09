@@ -11,6 +11,40 @@ function getClient(): Anthropic {
   return _client;
 }
 
+// ── User profile for personalized scans ──────────────────────────
+export interface UserScanProfile {
+  display_name?: string | null;
+  interests?: string[];
+  skills?: string[];
+  project_goals?: string | null;
+}
+
+function buildPersonalizationBlock(profile?: UserScanProfile): string {
+  if (!profile) return '';
+
+  const parts: string[] = [];
+
+  if (profile.display_name) {
+    parts.push(`L'utilisateur s'appelle ${profile.display_name}.`);
+  }
+
+  if (profile.interests && profile.interests.length > 0) {
+    parts.push(`Ses centres d'intérêt : ${profile.interests.join(', ')}.`);
+  }
+
+  if (profile.skills && profile.skills.length > 0) {
+    parts.push(`Ses compétences : ${profile.skills.join(', ')}.`);
+  }
+
+  if (profile.project_goals) {
+    parts.push(`Son objectif : ${profile.project_goals}`);
+  }
+
+  if (parts.length === 0) return '';
+
+  return `\n\nPROFIL UTILISATEUR :\n${parts.join('\n')}\nPriorise les opportunités alignées avec ce profil. Adapte les suggestions à ses compétences et intérêts.`;
+}
+
 const SCAN_SYSTEM_PROMPT = `Tu es un analyste stratégique d'opportunités business digitales.
 Tu identifies des projets CONCRETS qu'un non-technique peut lancer CETTE SEMAINE avec Claude Code (Opus 4.6, Sonnet 4.6).
 
@@ -63,11 +97,14 @@ Réponds UNIQUEMENT en JSON valide sans backticks :
 
 4-5 opportunités triées par score total décroissant. Vrais chiffres. Réalisable < 2 semaines avec Claude Code.`;
 
-export async function runOpportunityScan(): Promise<string> {
+export async function runOpportunityScan(userProfile?: UserScanProfile): Promise<string> {
+  const personalization = buildPersonalizationBlock(userProfile);
+  const systemPrompt = SCAN_SYSTEM_PROMPT + personalization;
+
   const response = await getClient().messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 16000,
-    system: SCAN_SYSTEM_PROMPT,
+    system: systemPrompt,
     tools: [
       {
         type: 'web_search_20250305',
